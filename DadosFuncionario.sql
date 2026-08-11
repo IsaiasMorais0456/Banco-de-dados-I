@@ -9,12 +9,19 @@ CREATE TABLE cargos(
 	Cargo VARCHAR(100) NOT NULL
 );
 
-ficha_tecnicaCREATE TABLE Dependentes(
+CREATE TABLE Dependentes(
 	id_dependente INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	id_funcionario INT NOT NULL,
 	nome VARCHAR(100) NOT NULL,
-	Data_nascimento DATE NOT NULL,
-	FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario)
+	Data_nascimento DATE NOT NULL
+);
+
+CREATE TABLE funcionario_dependente(
+	id_dependente INT NOT NULL,
+	id_funcionario INT NOT NULL,
+	familiaridade VARCHAR(25) NOT NULL,
+	PRIMARY KEY (id_dependente, id_funcionario),
+	FOREIGN KEY(id_dependente) REFERENCES dependentes(id_dependente),
+	FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario) 
 );
 
 
@@ -24,7 +31,7 @@ CREATE TABLE Setor(
 );
 
 
-funcionarioCREATE TABLE funcionario(
+CREATE TABLE funcionario(
 	id_funcionario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	matricula INT NOT NULL,
 	Nome VARCHAR(100) NOT NULL,
@@ -34,9 +41,34 @@ funcionarioCREATE TABLE funcionario(
 	estado_civil VARCHAR(25),
 	RG VARCHAR(15) NOT NULL,
 	CPF VARCHAR(15) NOT NULL,
-	Endereco VARCHAR(150) NOT NULL,
 	telefone VARCHAR(21) NOT NULL,
-	data_admissao DATE NOT NULL
+	data_admissao DATE NOT NULL,
+	id_endereco INT NOT NULL,
+	FOREIGN KEY(id_endereco) REFERENCES endereco(id_endereco)
+);
+
+CREATE TABLE endereco(
+	id_endereco INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	CEP VARCHAR(9) NOT NULL, 
+	id_estado INT NOT NULL,
+	bairro VARCHAR(50) NOT NULL,
+	logradouro VARCHAR(50) NOT NULL,
+	numero INT,
+	complemento VARCHAR(200),
+	FOREIGN KEY(id_estado) REFERENCES estado(id_estado)
+);
+
+CREATE TABLE estado(
+	id_estado INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	Uf VARCHAR(2) NOT NULL,
+	id_cidade INT NOT NULL,
+	FOREIGN KEY(id_cidade) REFERENCES cidade(id_cidade) 
+);
+
+
+CREATE TABLE cidade(
+	id_cidade INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nome VARCHAR(50) NOT NULL
 );
 
 
@@ -60,3 +92,5 @@ CREATE TABLE func_setor(
 	FOREIGN KEY(id_setor) REFERENCES setor(id_setor),
 	FOREIGN KEY(id_funcionario) REFERENCES funcionario(id_funcionario)
 );
+
+DROP DATABASE ficha_tecnica;
